@@ -42,3 +42,6 @@ deployed_models/
 
 # Misc
 .DS_Store 
+
+# Sample Images
+sample_images/
