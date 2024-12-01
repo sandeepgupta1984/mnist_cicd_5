@@ -7,15 +7,14 @@ import datetime
 class MNIST_CNN(nn.Module):
     def __init__(self):
         super(MNIST_CNN, self).__init__()
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=3, padding=1)
-        self.bn1 = nn.BatchNorm2d(10)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=3, padding=1)
-        self.bn2 = nn.BatchNorm2d(20)
+        self.conv1 = nn.Conv2d(1, 8, kernel_size=3, padding=1)
+        self.bn1 = nn.BatchNorm2d(8)
+        self.conv2 = nn.Conv2d(8, 16, kernel_size=3, padding=1)
+        self.bn2 = nn.BatchNorm2d(16)
         self.pool = nn.MaxPool2d(2)
         self.dropout = nn.Dropout2d(0.25)
-        self.fc1 = nn.Linear(20 * 7 * 7, 32)
-        self.fc2 = nn.Linear(32, 16)
-        self.fc3 = nn.Linear(16, 10)
+        self.fc1 = nn.Linear(16 * 7 * 7, 24)
+        self.fc2 = nn.Linear(24, 10)
         self.relu = nn.ReLU()
 
     def forward(self, x):
@@ -29,11 +28,10 @@ class MNIST_CNN(nn.Module):
         x = self.relu(x)
         x = self.pool(x)
         x = self.dropout(x)
-        x = x.view(-1, 20 * 7 * 7)
+        x = x.view(-1, 16 * 7 * 7)
         x = self.relu(self.fc1(x))
         x = self.dropout(x)
-        x = self.relu(self.fc2(x))
-        x = self.fc3(x)
+        x = self.fc2(x)
         return x
 
 def train_model():
@@ -43,8 +41,14 @@ def train_model():
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,)),
-        transforms.RandomRotation(10),
-        transforms.RandomAffine(degrees=0, translate=(0.1, 0.1))
+        transforms.RandomAffine(
+            degrees=15,
+            translate=(0.1, 0.1),
+            scale=(0.9, 1.1),
+            shear=10
+        ),
+        transforms.RandomPerspective(distortion_scale=0.2, p=0.5),
+        transforms.RandomErasing(p=0.1)
     ])
     
     train_dataset = datasets.MNIST('data', train=True, download=True, transform=transform)
