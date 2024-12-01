@@ -1,5 +1,7 @@
 # MNIST CNN with CI/CD Pipeline
 
+![Build Status](https://github.com/sandeepgupta1984/mnist_cicd_5/actions/workflows/ci-cd.yml/badge.svg)
+
 A PyTorch implementation of a Convolutional Neural Network for MNIST digit classification with automated testing, training, and deployment pipeline. The project includes data augmentation visualization and comprehensive testing.
 
 ## Project Structure
