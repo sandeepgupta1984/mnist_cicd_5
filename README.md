@@ -2,4 +2,4 @@
 
 A PyTorch implementation of a Convolutional Neural Network for MNIST digit classification with automated testing and deployment pipeline.
 
-## Project Structure 
+## Project Structure

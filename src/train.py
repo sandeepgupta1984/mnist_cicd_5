@@ -44,12 +44,33 @@ def save_sample_images(dataset, num_samples=5):
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=num_samples, shuffle=True)
     images, labels = next(iter(dataloader))
     
-    # Plot the images
-    fig, axes = plt.subplots(1, num_samples, figsize=(15, 3))
+    # Create multiple sets of augmented images
+    fig, axes = plt.subplots(2, num_samples, figsize=(15, 6))
+    
+    # Original images on top row
     for idx, (img, label) in enumerate(zip(images, labels)):
-        axes[idx].imshow(img.squeeze(), cmap='gray')
-        axes[idx].axis('off')
-        axes[idx].set_title(f'Label: {label.item()}')
+        axes[0][idx].imshow(img.squeeze(), cmap='gray')
+        axes[0][idx].axis('off')
+        axes[0][idx].set_title(f'Original: {label.item()}')
+    
+    # Augmented images on bottom row
+    transform = transforms.Compose([
+        transforms.RandomAffine(
+            degrees=15,
+            translate=(0.1, 0.1),
+            scale=(0.9, 1.1),
+            shear=10
+        ),
+        transforms.RandomPerspective(distortion_scale=0.2, p=0.5),
+        transforms.RandomErasing(p=0.1)
+    ])
+    
+    for idx, (img, label) in enumerate(zip(images, labels)):
+        # Apply augmentation
+        aug_img = transform(img)
+        axes[1][idx].imshow(aug_img.squeeze(), cmap='gray')
+        axes[1][idx].axis('off')
+        axes[1][idx].set_title(f'Augmented: {label.item()}')
     
     plt.tight_layout()
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
