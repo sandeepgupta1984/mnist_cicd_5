@@ -41,6 +41,8 @@ deployed_models/
 *.swo
 
 # Misc
-.DS_Store 
+.DS_Store
 
-# Sample Images
+# Do NOT ignore sample_images
+!sample_images/
+!sample_images/*.png
