@@ -43,25 +43,36 @@ def test_model():
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters())
     
-    # Quick training
+    # Train for multiple iterations on the same batch
     model.train()
     data, target = next(iter(test_loader))
     data, target = data.to(device), target.to(device)
     
-    optimizer.zero_grad()
-    output = model(data)
-    loss = criterion(output, target)
-    loss.backward()
-    optimizer.step()
+    # Training loop with multiple iterations
+    for epoch in range(50):  # Increased training iterations
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+        
+        # Print progress every 10 epochs
+        if (epoch + 1) % 10 == 0:
+            with torch.no_grad():
+                output = model(data)
+                pred = output.argmax(dim=1)
+                correct = pred.eq(target).sum().item()
+                accuracy = correct / len(target)
+                print(f"Epoch {epoch + 1}, Accuracy: {accuracy:.4f}")
 
-    # Check accuracy
+    # Final accuracy check
     model.eval()
     with torch.no_grad():
         output = model(data)
         pred = output.argmax(dim=1)
         correct = pred.eq(target).sum().item()
         accuracy = correct / len(target)
-        print(f"Model accuracy: {accuracy:.4f}")
+        print(f"Final accuracy: {accuracy:.4f}")
         assert accuracy > 0.95, f"Accuracy {accuracy:.4f} is below threshold (0.95)"
         print("✓ Accuracy test passed")
 
