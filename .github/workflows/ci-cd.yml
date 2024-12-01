@@ -27,6 +27,7 @@ jobs:
 
     - name: Train model
       run: |
+        mkdir -p sample_images
         python src/train.py
 
     - name: Run tests
@@ -42,3 +43,18 @@ jobs:
       with:
         name: trained-model
         path: deployed_models/
+
+    - name: Save sample images
+      uses: actions/upload-artifact@v4
+      with:
+        name: augmented-samples
+        path: sample_images/
+        if-no-files-found: error
+
+    - name: Commit and push sample images
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add sample_images/
+        git commit -m "Add augmented sample images [skip ci]" || echo "No changes to commit"
+        git push
