@@ -3,6 +3,7 @@
 A PyTorch implementation of a Convolutional Neural Network for MNIST digit classification with automated testing, training, and deployment pipeline. The project includes data augmentation visualization and comprehensive testing.
 
 ## Project Structure
+```
 project/
 ├── .github/
 │ └── workflows/
@@ -16,6 +17,7 @@ project/
 ├── requirements.txt # Project dependencies
 ├── .gitignore # Git ignore rules
 └── README.md # Project documentation
+```
 
 ### Model Features:
 - Input: 28x28 grayscale images
