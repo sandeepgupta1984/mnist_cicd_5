@@ -9,10 +9,14 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -57,4 +61,6 @@ jobs:
         git config --local user.name "github-actions[bot]"
         git add sample_images/
         git commit -m "Add augmented sample images [skip ci]" || echo "No changes to commit"
-        git push
+        git push origin ${GITHUB_REF#refs/heads/}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
